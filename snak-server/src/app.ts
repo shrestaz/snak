@@ -57,4 +57,25 @@ app.post(
   async (req: Request, res: Response) => await login(req, res)
 );
 
-io.on('connection', (socket: Socket) => chatSocket(socket));
+//www.digitalocean.com/community/tutorials/angular-socket-io
+// io.on('connection', (socket: Socket) => chatSocket(socket));
+https: io.on('connection', (socket: Socket) => {
+  let previousId: string;
+
+  const safeJoin = (currentId: string) => {
+    socket.leave(previousId);
+    socket.join(currentId);
+    console.log(`Socket ${socket.id} joined room ${currentId}`);
+    previousId = currentId;
+  };
+
+  socket.on('getDoc', (docId) => {
+    safeJoin(docId);
+    socket.emit('document');
+  });
+
+  // create chat room data collection with docs
+  // get chat room "document by id"
+
+  // ...
+});
