@@ -9,17 +9,29 @@ import { initDb } from './database-connection';
 import { getAllChatRooms } from './routes/chat-room/get-all-chat-rooms';
 import { createChatRoom } from './routes/chat-room/create-chat-room';
 import { authentication } from './middleware/authentication';
+import cors from 'cors';
+import { Server } from 'http';
+import { Socket } from 'socket.io';
+import { chatSocket } from './chat-socket/chat-socket';
+
 const app: Application = express();
+const http = new Server(app);
+const io = require('socket.io')(http) as Socket;
+
+app.use(json());
+app.use(cors());
 
 const port = process.env.PORT;
 let db: Db;
 
-app.listen(port, async function () {
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html');
+});
+
+http.listen(port, async function () {
   console.log(`App is listening on port ${port}`);
   db = await initDb();
 });
-
-app.use(json());
 
 app.get('/helloWorld', (req: Request, res: Response) => {
   res.send('Hello World!');
@@ -44,3 +56,5 @@ app.post(
   '/user/login',
   async (req: Request, res: Response) => await login(req, res)
 );
+
+io.on('connection', (socket: Socket) => chatSocket(socket));
