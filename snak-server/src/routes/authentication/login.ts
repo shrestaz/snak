@@ -27,6 +27,8 @@ export async function login(req: Request, res: Response) {
   }
 
   const passwordMatch = await compare(password, existingUser.password);
+  console.log(`Password match = ${passwordMatch}`);
+
   if (!passwordMatch) {
     return res.status(400).send(`Incorrect password. Please try again.`);
   }

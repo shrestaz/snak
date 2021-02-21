@@ -18,8 +18,8 @@ export function authentication(
     return res.status(500).send(`JWT_KEY not found.`);
   }
   try {
-    const authToken = tokenInHeader.split(' ')[1];
-    const decodedToken = verify(authToken, jwtKey) as JwtTokenPayload;
+    const accessToken = tokenInHeader.split(' ')[1];
+    const decodedToken = verify(accessToken, jwtKey) as JwtTokenPayload;
     console.log(decodedToken);
     const username = decodedToken.username;
     if (!username) {
