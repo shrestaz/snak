@@ -1,5 +1,72 @@
-<div *ngIf="username$ | async; else notLoggedIn">
-  {{ username$ | async }}
-  <button (click)="logout()">Logout</button>
-</div>
-<ng-template #notLoggedIn> Login </ng-template>
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="bg-gray-800">
+  <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="relative flex items-center justify-between h-16">
+      <div
+        class="flex-1 flex items-center justify-center lg:items-stretch lg:justify-start sm:items-start"
+      >
+        <a
+          class="flex-shrink-0 flex items-center text-white text-3xl font-semibold"
+          [routerLink]="'/'"
+        >
+          <hero-icon name="chat-alt-2" class="lg:block h-8 mr-3"></hero-icon>
+          <span>Snak</span>
+        </a>
+      </div>
+      <div
+        class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
+      >
+        <!-- Profile dropdown -->
+        <div class="ml-3 flex flex-wrap content-start">
+          <div
+            *ngIf="username$ | async; else notLoggedIn"
+            class="text-gray-300 rounded-md text-base font-medium"
+          >
+            <hero-icon
+              name="user-circle"
+              class="h-6 w-6 mx-2 text-white pt-2 text-3xl"
+            ></hero-icon>
+            {{ username$ | async }}
+            <button
+              class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium mx-2"
+              (click)="logout()"
+            >
+              Log out
+            </button>
+          </div>
+          <ng-template #notLoggedIn class="flex flex-wrap content-start">
+            <button
+              class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium mx-2"
+              [routerLink]="'/register'"
+            >
+              Register
+            </button>
+            <button
+              class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-base font-medium mx-2"
+              [routerLink]="'/login'"
+            >
+              Log in
+            </button>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu, show/hide based on menu state. -->
+  <!-- <div class="sm:hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+
+      <a
+        href="#"
+        class="bg-gray-900 text-white block px-3 pb-2 rounded-md text-base font-medium"
+      >
+        <hero-icon
+          name="arrow-circle-left-solid"
+          class="hidden lg:block w-auto mr-3 text-3xl pt-1"
+        ></hero-icon
+        >Back to all Chat rooms</a
+      >
+    </div>
+  </div> -->
+</nav>

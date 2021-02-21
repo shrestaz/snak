@@ -10,6 +10,12 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import {
+  HeroIconsModule,
+  chatAlt2,
+  userCircle,
+  arrowCircleLeftSolid,
+} from 'ng-heroicons';
 
 const appRoutes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -32,6 +38,7 @@ const appRoutes: Routes = [
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
+    HeroIconsModule.withIcons({ chatAlt2, userCircle, arrowCircleLeftSolid }),
   ],
   providers: [],
   bootstrap: [AppComponent],
