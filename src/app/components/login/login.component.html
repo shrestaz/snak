@@ -1,18 +1,6 @@
-<!-- <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <label>
-    Username:
-    <input type="text" formControlName="username" />
-  </label>
-
-  <label>
-    Password:
-    <input type="password" formControlName="password" />
-  </label>
-  <button (click)="onSubmit()">Login</button>
-</form> -->
-
 <div
-  class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
+  style="min-height: calc(100vh - 64px)"
+  class="flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8"
 >
   <div class="max-w-md w-full space-y-8">
     <div>
@@ -23,9 +11,14 @@
         <span>Snak</span>
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-        Sign in to your account
+        <span *ngIf="(signUpMessage$ | async)?.success">
+          Welcome {{ (signUpMessage$ | async)?.username }}. </span
+        >Sign in to your account
       </h2>
-      <p class="mt-2 text-center text-sm text-gray-600">
+      <p
+        class="mt-2 text-center text-sm text-gray-600"
+        [hidden]="(signUpMessage$ | async)?.success"
+      >
         Or
         <a
           [routerLink]="'/register'"

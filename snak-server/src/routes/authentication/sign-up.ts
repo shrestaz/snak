@@ -39,9 +39,7 @@ export async function signUp(req: Request, res: Response) {
       console.log(
         `User successfull created with username ${username} and id ${result.insertedId}`
       );
-      return res
-        .status(200)
-        .send(`Successfully created user with username ${username}`);
+      return res.status(200).json({ success: true, username });
     }
   } catch (error) {
     res

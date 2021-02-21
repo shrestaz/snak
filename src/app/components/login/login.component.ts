@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { Observable } from 'rxjs';
+import { AuthService, SignUpResponse } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,11 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', Validators.required),
   });
 
-  constructor(private authService: AuthService, private router: Router) {}
+  signUpMessage$ = new Observable<SignUpResponse>();
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.signUpMessage$ = this.authService.signUpSuccess;
+  }
 
   ngOnInit(): void {}
 

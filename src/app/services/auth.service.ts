@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
+
 export interface User {
   username: string;
   password: string;
@@ -16,11 +17,17 @@ export interface AuthenticationResponse {
   username: string;
 }
 
+export interface SignUpResponse {
+  success: boolean;
+  username?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private baseUrl = environment.apiUrl;
+  signUpSuccess = new BehaviorSubject<SignUpResponse>({ success: false });
   username = new BehaviorSubject(this.usernameFromResponse);
 
   set usernameFromResponse(value) {
@@ -42,7 +49,11 @@ export class AuthService {
 
   public signUp(user: UserSignUp) {
     const signupEndpoint = `${this.baseUrl}/user/signUp`;
-    this.http.post(signupEndpoint, user);
+    const response = this.http.post(
+      signupEndpoint,
+      user
+    ) as Observable<SignUpResponse>;
+    response.pipe(tap((data) => this.signUpSuccess.next(data))).subscribe();
   }
 
   public login(user: User) {

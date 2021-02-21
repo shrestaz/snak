@@ -6,10 +6,13 @@ import { ChatRoom } from '../../interfaces/chat-room';
 export async function createChatRoom(req: Request, res: Response) {
   try {
     const db = await initDb();
-    const { name } = req.body as ChatRoom;
+    const authorizedUser = res.locals.username;
+    const { name, description, emoji } = req.body as ChatRoom;
 
-    if (!name) {
-      return res.status(400).send(`Please provide a name for the chat room.`);
+    if (!name || !description) {
+      return res
+        .status(400)
+        .send(`Please provide a name and description for the chat room.`);
     }
 
     const isChatRoomNameTaken = await db
@@ -26,7 +29,12 @@ export async function createChatRoom(req: Request, res: Response) {
 
     const insertResult = await db
       .collection<ChatRoom>(dataCollection.ChatRooms)
-      .insertOne({ name });
+      .insertOne({
+        name,
+        description,
+        createdBy: authorizedUser,
+        emoji: emoji ?? null,
+      });
     console.log(
       `Chat room created with name ${name} and id ${insertResult.insertedId}`
     );

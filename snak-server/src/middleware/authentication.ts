@@ -25,6 +25,7 @@ export function authentication(
     if (!username) {
       return res.send(401).send(`Invalid request.`);
     }
+    res.locals.username = username;
     next();
   } catch (error) {
     return res
