@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 
 @Component({
@@ -11,11 +13,32 @@ import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 export class AllChatRoomsComponent {
   public allRooms$: Observable<ChatRoomResponse[]>;
 
-  constructor(private roomsService: RoomsService, private router: Router) {
+  constructor(
+    private roomsService: RoomsService,
+    private router: Router,
+    private authService: AuthService,
+    private snackbar: MatSnackBar
+  ) {
     this.allRooms$ = this.roomsService.getAllRooms();
   }
 
+  navigateToLogin() {
+    console.log('lol');
+  }
+
   goToRoom(roomId: string) {
+    const isUserLoggedIn = this.authService.usernameFromResponse;
+    if (!isUserLoggedIn) {
+      let snackBarRef = this.snackbar.open(
+        `Please login first to join a chat room`,
+        'Login',
+        { duration: 5000 }
+      );
+      snackBarRef
+        .onAction()
+        .subscribe(() => this.router.navigateByUrl('/login'));
+      return;
+    }
     this.router.navigateByUrl(`/room/${roomId}`);
   }
 }

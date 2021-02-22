@@ -18,6 +18,9 @@ import {
 } from 'ng-heroicons';
 import { AllChatRoomsComponent } from './components/all-chat-rooms/all-chat-rooms.component';
 import { ChatRoomComponent } from './components/chat-room/chat-room.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const appRoutes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -41,10 +44,13 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     HttpClientModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
     HeroIconsModule.withIcons({ chatAlt2, userCircle, arrowCircleLeftSolid }),
+    MatButtonModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
