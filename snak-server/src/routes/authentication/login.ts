@@ -16,9 +16,9 @@ export async function login(req: Request, res: Response) {
 
   const existingUser = await getExistingUser(username, db);
   if (!existingUser) {
-    return res
-      .status(400)
-      .send(`User ${username} does not exist. Please create an account first.`);
+    return res.status(400).json({
+      error: `User ${username} does not exist. Please create an account first.`,
+    });
   }
 
   const jwtKey = process.env.JWT_KEY;
@@ -27,10 +27,11 @@ export async function login(req: Request, res: Response) {
   }
 
   const passwordMatch = await compare(password, existingUser.password);
-  console.log(`Password match = ${passwordMatch}`);
 
   if (!passwordMatch) {
-    return res.status(400).send(`Incorrect password. Please try again.`);
+    return res.status(400).json({
+      error: `Incorrect password. Please try again.`,
+    });
   }
   const accessToken = sign(JSON.stringify(existingUser), jwtKey);
   console.log(`${username} successfully logged in.`);

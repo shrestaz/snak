@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,8 +7,6 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./nav-bar.component.scss'],
 })
 export class NavBarComponent {
-  // @ViewChild('user-menu') userMenu: ElementRef;
-
   public username$;
   constructor(private authService: AuthService) {
     this.username$ = this.authService.username;

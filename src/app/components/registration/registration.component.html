@@ -53,6 +53,13 @@
               Please provide a username.
             </span>
           </div>
+          <div *ngIf="submitted && !success">
+            <span
+              class="flex items-center font-medium tracking-wide text-red-500 text-xs my-1 ml-1"
+            >
+              {{ (signUpMessage$ | async)?.error }}
+            </span>
+          </div>
         </div>
         <div>
           <label for="password" class="sr-only">Password</label>
@@ -144,3 +151,5 @@
     </form>
   </div>
 </div>
+
+{{ signUpMessage$ | async | json }}

@@ -12,14 +12,14 @@ import { authentication } from './middleware/authentication';
 import cors from 'cors';
 import { Server } from 'http';
 import { Socket } from 'socket.io';
-import { chatSocket } from './chat-socket/chat-socket';
+import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
+import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
 
-const app: Application = express();
-const http = new Server(app);
-const io = require('socket.io')(http) as Socket;
-
-app.use(json());
+const app = express();
 app.use(cors());
+app.use(json());
+const http = new Server(app);
+const io = require('socket.io')(http, { cors: { origins: [] } }) as Socket;
 
 const port = process.env.PORT;
 let db: Db;
@@ -57,25 +57,22 @@ app.post(
   async (req: Request, res: Response) => await login(req, res)
 );
 
-//www.digitalocean.com/community/tutorials/angular-socket-io
-// io.on('connection', (socket: Socket) => chatSocket(socket));
-https: io.on('connection', (socket: Socket) => {
-  let previousId: string;
+app.get(
+  '/chatRoom/:chatRoomId',
+  async (req: Request, res: Response) => await getMessagesForChatRoom(req, res)
+);
 
-  const safeJoin = (currentId: string) => {
-    socket.leave(previousId);
-    socket.join(currentId);
-    console.log(`Socket ${socket.id} joined room ${currentId}`);
-    previousId = currentId;
-  };
+app.post(
+  '/chatRoomMessages/:chatRoomId',
+  async (req: Request, res: Response) => await saveMessagesForChatRoom(req, res)
+);
 
-  socket.on('getDoc', (docId) => {
-    safeJoin(docId);
-    socket.emit('document');
+io.on('connection', function (socket) {
+  console.log('User connected');
+  socket.on('disconnect', function () {
+    console.log('User disconnected');
   });
-
-  // create chat room data collection with docs
-  // get chat room "document by id"
-
-  // ...
+  socket.on('save-message', function (data: string) {
+    io.emit('new-message', { message: data });
+  });
 });

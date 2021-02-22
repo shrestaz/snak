@@ -1,4 +1,4 @@
-import e, { Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { initDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
 import { ChatRoom } from '../../interfaces/chat-room';

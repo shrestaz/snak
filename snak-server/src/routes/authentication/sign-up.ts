@@ -15,11 +15,9 @@ export async function signUp(req: Request, res: Response) {
     // Sanity checks
     const userExists = await getExistingUser(username, db);
     if (userExists) {
-      return res
-        .status(400)
-        .send(
-          `User ${username} already exists. Please try again with a different username.`
-        );
+      return res.status(400).json({
+        error: `User ${username} already exists. Please try again with a different name.`,
+      });
     }
     const doesPasswordMatch = signupPasswordMatch(password, confirmPassword);
     if (!doesPasswordMatch) {

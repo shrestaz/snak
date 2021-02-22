@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 
@@ -10,7 +11,11 @@ import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 export class AllChatRoomsComponent {
   public allRooms$: Observable<ChatRoomResponse[]>;
 
-  constructor(private roomsService: RoomsService) {
+  constructor(private roomsService: RoomsService, private router: Router) {
     this.allRooms$ = this.roomsService.getAllRooms();
+  }
+
+  goToRoom(roomId: string) {
+    this.router.navigateByUrl(`/room/${roomId}`);
   }
 }

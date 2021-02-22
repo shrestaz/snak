@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 export interface User {
   username: string;
@@ -18,8 +18,14 @@ export interface AuthenticationResponse {
 }
 
 export interface SignUpResponse {
-  success: boolean;
+  success?: boolean;
   username?: string;
+  error?: string;
+}
+
+export interface LoginResponse {
+  error?: string;
+  success?: boolean;
 }
 
 @Injectable({
@@ -27,7 +33,8 @@ export interface SignUpResponse {
 })
 export class AuthService {
   private baseUrl = environment.apiUrl;
-  signUpSuccess = new BehaviorSubject<SignUpResponse>({ success: false });
+  signUpResponse = new BehaviorSubject<SignUpResponse>({ success: false });
+  loginResponse = new BehaviorSubject<LoginResponse>({ success: false });
   username = new BehaviorSubject(this.usernameFromResponse);
 
   set usernameFromResponse(value) {
@@ -48,15 +55,31 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   public signUp(user: UserSignUp) {
+    let success: boolean = false;
     const signupEndpoint = `${this.baseUrl}/user/signUp`;
     const response = this.http.post(
       signupEndpoint,
       user
     ) as Observable<SignUpResponse>;
-    response.pipe(tap((data) => this.signUpSuccess.next(data))).subscribe();
+    response
+      .pipe(
+        tap((data) => {
+          this.signUpResponse.next(data);
+          success = true;
+        }),
+        catchError((data) => {
+          this.signUpResponse.next(data.error);
+          success = false;
+          return of();
+        })
+      )
+      .subscribe();
+    return success;
   }
 
   public login(user: User) {
+    let success: boolean = false;
+
     const loginEndpoint = `${this.baseUrl}/user/login`;
     const response = this.http.post(
       loginEndpoint,
@@ -65,12 +88,20 @@ export class AuthService {
     response
       .pipe(
         tap((res) => {
+          this.loginResponse.next({ success: true });
+          success = true;
           this.usernameFromResponse = res.username;
           localStorage.setItem('username', res.username);
           localStorage.setItem('accessToken', res.accessToken);
+        }),
+        catchError((data) => {
+          this.loginResponse.next({ success: false, error: data.error.error });
+          success = false;
+          return of();
         })
       )
       .subscribe();
+    return success;
   }
 
   public logout() {

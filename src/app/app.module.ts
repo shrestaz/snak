@@ -17,12 +17,14 @@ import {
   arrowCircleLeftSolid,
 } from 'ng-heroicons';
 import { AllChatRoomsComponent } from './components/all-chat-rooms/all-chat-rooms.component';
+import { ChatRoomComponent } from './components/chat-room/chat-room.component';
 
 const appRoutes: Routes = [
   { path: '', component: LandingPageComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'login', component: LoginComponent },
   { path: 'allRooms', component: AllChatRoomsComponent },
+  { path: 'room/:id', component: ChatRoomComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
@@ -34,6 +36,7 @@ const appRoutes: Routes = [
     RegistrationComponent,
     NavBarComponent,
     AllChatRoomsComponent,
+    ChatRoomComponent,
   ],
   imports: [
     BrowserModule,

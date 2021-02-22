@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface ChatRoomResponse {
+  _id: string;
   name: string;
   description: string;
   userCount?: number;

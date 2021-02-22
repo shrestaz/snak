@@ -12,7 +12,11 @@
       </div>
       <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
         <span *ngIf="(signUpMessage$ | async)?.success">
-          Welcome {{ (signUpMessage$ | async)?.username }}. </span
+          Welcome
+          <span class="text-gray-800 bg-blue-200 px-1">{{
+            (signUpMessage$ | async)?.username
+          }}</span
+          >. </span
         >Sign in to your account
       </h2>
       <p
@@ -58,6 +62,13 @@
             class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             placeholder="Password"
           />
+        </div>
+        <div *ngIf="submitted && !success">
+          <span
+            class="flex items-center font-medium tracking-wide text-red-500 text-xs my-1 ml-1"
+          >
+            {{ (loginMessage$ | async)?.error }}
+          </span>
         </div>
       </div>
 

@@ -1,6 +1,12 @@
+import { ObjectId } from 'mongodb';
+
 export interface Message {
-  text: string;
-  chatRoom: string;
-  from: string;
-  sentAt: Date;
+  message?: string;
+  chatRoomId?: string;
+  from?: string;
+  sentAt?: Date;
+}
+
+export interface MessageDB extends Message {
+  _id: ObjectId;
 }
