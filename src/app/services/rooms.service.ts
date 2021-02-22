@@ -21,10 +21,18 @@ export class RoomsService {
   constructor(private http: HttpClient) {}
 
   public getAllRooms() {
-    const allRoomsEndpoint = `${this.baseUrl}/chatRooms`;
+    const allRoomsEndpoint = `${this.baseUrl}/getAllChatRooms`;
     const response = this.http.get(allRoomsEndpoint) as Observable<
       ChatRoomResponse[]
     >;
+    return response;
+  }
+
+  public getRoomById(roomId: string) {
+    const getRoomEndpoint = `${this.baseUrl}/getChatRoomById/${roomId}`;
+    const response = this.http.get(
+      getRoomEndpoint
+    ) as Observable<ChatRoomResponse>;
     return response;
   }
 }

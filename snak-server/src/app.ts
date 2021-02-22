@@ -14,6 +14,7 @@ import { Server } from 'http';
 import { Socket } from 'socket.io';
 import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
 import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
+import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 
 const app = express();
 app.use(cors());
@@ -37,8 +38,12 @@ app.get('/helloWorld', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 
-app.get('/chatRooms', async (req: Request, res: Response) => {
+app.get('/getAllChatRooms', async (req: Request, res: Response) => {
   await getAllChatRooms(req, res);
+});
+
+app.get('/getChatRoomById/:chatRoomId', async (req: Request, res: Response) => {
+  await getChatRoomById(req, res);
 });
 
 app.post(
@@ -58,7 +63,7 @@ app.post(
 );
 
 app.get(
-  '/chatRoom/:chatRoomId',
+  '/chatRoomMessages/:chatRoomId',
   async (req: Request, res: Response) => await getMessagesForChatRoom(req, res)
 );
 
@@ -69,10 +74,11 @@ app.post(
 
 io.on('connection', function (socket) {
   console.log('User connected');
-  socket.on('disconnect', function () {
-    console.log('User disconnected');
-  });
-  socket.on('save-message', function (data: string) {
-    io.emit('new-message', { message: data });
+  // socket.on('disconnect', function () {
+  //   console.log('User{} disconnected');
+  // });
+  socket.on('message', (message: string) => {
+    console.log(message);
+    io.emit('message-broadcast', { message });
   });
 });

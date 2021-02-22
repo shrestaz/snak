@@ -12,5 +12,5 @@ export async function getMessagesForChatRoom(req: Request, res: Response) {
     .find({ chatRoomId })
     .toArray();
 
-  res.status(200).json({ messages: messagesForChatRoom });
+  res.status(200).json(messagesForChatRoom);
 }

@@ -11,24 +11,26 @@ export interface ChatRoomMessages {
   from?: string;
   sentAt?: Date;
 }
-[];
-
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
   constructor(private http: HttpClient, private authService: AuthService) {}
   private baseUrl = environment.apiUrl;
-  chatRoomMessages = new BehaviorSubject<ChatRoomMessages>({});
+  chatRoomMessages = new BehaviorSubject<ChatRoomMessages[]>([]);
 
   getChatMessagesByRoomId(roomId: string) {
     const response = this.http.get(
-      `${this.baseUrl}/chatRoom/${roomId}`
+      `${this.baseUrl}/chatRoomMessages/${roomId}`
     ) as Observable<ChatRoomMessages>;
 
     response
       .pipe(
-        tap((data) => this.chatRoomMessages.next(data)),
+        tap((data) =>
+          this.chatRoomMessages.next(
+            this.chatRoomMessages.getValue().concat(data)
+          )
+        ),
         catchError((err) => {
           console.log(err);
           return of(null);

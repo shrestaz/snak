@@ -9,8 +9,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { io } from 'socket.io-client';
-import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
+import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 
 @Component({
   selector: 'app-chat-room',
@@ -25,13 +25,19 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     message: new FormControl('', Validators.required),
   });
 
-  chatMessages$: Observable<ChatRoomMessages>;
+  chatMessages$: Observable<ChatRoomMessages[]>;
+  roomDetails$: Observable<ChatRoomResponse>;
 
   socket = io('http://localhost:3000');
 
-  constructor(private route: ActivatedRoute, private chatService: ChatService) {
+  constructor(
+    private route: ActivatedRoute,
+    private chatService: ChatService,
+    private roomService: RoomsService
+  ) {
     this.route.params.subscribe((v) => (this.roomId = v.id));
     this.scrollToBottom();
+    this.roomDetails$ = this.roomService.getRoomById(this.roomId);
     this.chatMessages$ = this.chatService
       .getChatMessagesByRoomId(this.roomId)
       .asObservable();
@@ -40,23 +46,6 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   ngOnInit() {
     this.joinRoom();
     this.socket.on('new-message', (data: string) => {});
-
-    // this.socket.on(
-    //   'new-message',
-    //   function (data) {
-    //     if (
-    //       data.message.room === JSON.parse(localStorage.getItem('user')).room
-    //     ) {
-    //       this.chats.push(data.message);
-    //       this.msgData = {
-    //         room: user.room,
-    //         nickname: user.nickname,
-    //         message: '',
-    //       };
-    //       this.scrollToBottom();
-    //     }
-    //   }.bind(this)
-    // );
   }
 
   ngAfterViewChecked() {
@@ -77,34 +66,17 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   joinRoom() {
     this.socket.emit('connection');
-    // var date = new Date();
-    // localStorage.setItem('user', JSON.stringify(this.newUser));
-    // this.getChatByRoom(this.newUser.room);
-    // this.msgData = {
-    //   room: this.newUser.room,
-    //   nickname: this.newUser.nickname,
-    //   message: '',
-    // };
-    // this.joinned = true;
-    // this.socket.emit('save-message', {
-    //   room: this.newUser.room,
-    //   nickname: this.newUser.nickname,
-    //   message: 'Join this room',
-    //   updated_at: date,
-    // });
+    this.socket.on('message-broadcast', (data: string) => {
+      if (data) {
+        console.log(`Incoming message: ${JSON.stringify(data)}`);
+        this.chatService.getChatMessagesByRoomId(this.roomId).asObservable();
+      }
+    });
   }
 
-  onSubmit() {
+  sendMessage() {
     const message = this.chatForm.controls['message'].value;
     this.chatService.saveChatMessagesByRoomId(this.roomId, message);
-    this.socket.emit('save-message', message);
-    // this.chatService.saveChat(this.msgData).then(
-    //   (result) => {
-    //     this.socket.emit('save-message', result);
-    //   },
-    //   (err) => {
-    //     console.log(err);
-    //   }
-    // );
+    this.socket.emit('message', message);
   }
 }
