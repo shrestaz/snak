@@ -34,7 +34,8 @@
             "scripts": [],
             "customWebpackConfig": {
               "path": "webpack.config.js"
-            }
+            },
+            "allowedCommonJsDependencies": ["socket.io-client"]
           },
           "configurations": {
             "production": {

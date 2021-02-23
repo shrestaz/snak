@@ -14,7 +14,7 @@ export function transformDateToHumanReadable(messages: MessageDB[]) {
 
     const hour = new Date(date).getHours();
     const minutes = new Date(date).getMinutes();
-    const day = new Date(date).getUTCDay();
+    const day = new Date(date).getUTCDate();
     const month = new Date(date).getUTCMonth() + 1; // Because getmonth() start from 0
     const year = new Date(date).getUTCFullYear();
 
