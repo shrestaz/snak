@@ -22,10 +22,6 @@ export class AllChatRoomsComponent {
     this.allRooms$ = this.roomsService.getAllRooms();
   }
 
-  navigateToLogin() {
-    console.log('lol');
-  }
-
   goToRoom(roomId: string) {
     const isUserLoggedIn = this.authService.usernameFromResponse;
     if (!isUserLoggedIn) {

@@ -8,7 +8,34 @@ export async function getAllChatRooms(req: Request, res: Response) {
     const db = await getDb();
     const allChatRooms = await db
       .collection<ChatRoomDB>(dataCollection.ChatRooms)
-      .find({})
+      .aggregate([
+        {
+          $addFields: {
+            idAsString: {
+              $toString: '$_id',
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: 'messages',
+            localField: 'idAsString',
+            foreignField: 'chatRoomId',
+            as: 'messages',
+          },
+        },
+        {
+          $project: {
+            name: 1,
+            description: 1,
+            createdBy: 1,
+            emoji: 1,
+            messagesCount: {
+              $size: '$messages',
+            },
+          },
+        },
+      ])
       .toArray();
 
     const allChatRoomsWithStringId = allChatRooms.map((v) => ({

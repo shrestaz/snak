@@ -7,7 +7,7 @@ export interface ChatRoomResponse {
   _id: string;
   name: string;
   description: string;
-  userCount?: number;
+  messagesCount?: number;
   emoji: string | null;
   createdBy: string;
 }
