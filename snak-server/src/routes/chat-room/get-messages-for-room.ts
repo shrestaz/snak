@@ -1,10 +1,10 @@
-import { initDb } from '../../database-connection';
+import { getDb } from '../../database-connection';
 import { Request, Response } from 'express';
 import { MessageDB } from '../../interfaces/message';
 import { dataCollection } from '../../enum/data-collection';
 
 export async function getMessagesForChatRoom(req: Request, res: Response) {
-  const db = await initDb();
+  const db = await getDb();
   const chatRoomId = req.params.chatRoomId;
 
   const messagesForChatRoom = await db

@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { hash } from 'bcrypt';
-import { initDb } from '../../database-connection';
+import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
 import { getExistingUser } from './helpers/get-existing-user';
 import { signupPasswordMatch } from './helpers/signup-password-match';
 import { UserSignUpInput } from '../../interfaces/user';
 
 export async function signUp(req: Request, res: Response) {
-  const db = await initDb();
+  const db = await getDb();
   try {
     // extract username and password from request body
     const { username, password, confirmPassword } = req.body as UserSignUpInput;

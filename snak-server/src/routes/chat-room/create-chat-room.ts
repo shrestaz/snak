@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { initDb } from '../../database-connection';
+import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
 import { ChatRoom } from '../../interfaces/chat-room';
 
 export async function createChatRoom(req: Request, res: Response) {
   try {
-    const db = await initDb();
+    const db = await getDb();
     const authorizedUser = res.locals.username;
     const { name, description, emoji } = req.body as ChatRoom;
 

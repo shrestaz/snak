@@ -23,7 +23,6 @@ const http = new Server(app);
 const io = require('socket.io')(http, { cors: { origins: [] } }) as Socket;
 
 const port = process.env.PORT;
-let db: Db;
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -31,7 +30,7 @@ app.get('/', (req, res) => {
 
 http.listen(port, async function () {
   console.log(`App is listening on port ${port}`);
-  db = await initDb();
+  await initDb();
 });
 
 app.get('/helloWorld', (req: Request, res: Response) => {

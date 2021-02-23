@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
-import { initDb } from '../../database-connection';
+import { getDb } from '../../database-connection';
 import { ChatRoomDB } from '../../interfaces/chat-room';
 import { dataCollection } from '../../enum/data-collection';
 
 export async function getAllChatRooms(req: Request, res: Response) {
   try {
-    const db = await initDb();
+    const db = await getDb();
     const allChatRooms = await db
       .collection<ChatRoomDB>(dataCollection.ChatRooms)
       .find({})

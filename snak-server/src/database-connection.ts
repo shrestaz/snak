@@ -1,7 +1,9 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 
 // Replace the uri string with your MongoDB deployment's connection string.
 const uri = process.env.CONNECTION_STRING ?? 'unknown';
+
+let db: Db;
 
 export async function initDb() {
   const client = new MongoClient(uri, {
@@ -11,11 +13,16 @@ export async function initDb() {
   });
   try {
     await client.connect();
-    const db = client.db(process.env.DB_NAME);
-    return db;
+    db = client.db(process.env.DB_NAME);
   } catch (error) {
-    // Ensures that the client will close when you finish/error
     console.error(`initDb failed with error: "${error.message}"`);
     throw error;
   }
+}
+
+export async function getDb() {
+  if (!db) {
+    await initDb();
+  }
+  return db;
 }

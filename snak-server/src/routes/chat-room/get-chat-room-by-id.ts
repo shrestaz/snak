@@ -1,11 +1,11 @@
-import { initDb } from '../../database-connection';
+import { getDb } from '../../database-connection';
 import { Request, Response } from 'express';
 import { ChatRoomDB } from '../../interfaces/chat-room';
 import { dataCollection } from '../../enum/data-collection';
 import { ObjectId } from 'mongodb';
 
 export async function getChatRoomById(req: Request, res: Response) {
-  const db = await initDb();
+  const db = await getDb();
   const chatRoomId = req.params.chatRoomId;
 
   const chatRoom = await db
