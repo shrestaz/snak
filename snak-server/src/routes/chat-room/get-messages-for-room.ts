@@ -2,6 +2,7 @@ import { getDb } from '../../database-connection';
 import { Request, Response } from 'express';
 import { MessageDB } from '../../interfaces/message';
 import { dataCollection } from '../../enum/data-collection';
+import { transformDateToHumanReadable } from './helpers/transform-date-to-human-readable';
 
 export async function getMessagesForChatRoom(req: Request, res: Response) {
   const db = await getDb();
@@ -12,19 +13,9 @@ export async function getMessagesForChatRoom(req: Request, res: Response) {
     .find({ chatRoomId })
     .toArray();
 
-  const messagesWithReadableDate = messagesForChatRoom.map((v) => {
-    const date = v.sentAt;
-    const hour = new Date(date).getHours();
-    const minutes = new Date(date).getMinutes();
-    const day = new Date(date).getUTCDay();
-    const month = new Date(date).getUTCMonth() + 1; // Because getmonth() start from 0
-    const year = new Date(date).getUTCFullYear();
-
-    const transformedDate = `${hour}:${minutes} on ${day}/${month}/${year}`;
-
-    v.sentAt = transformedDate as any;
-    return v;
-  });
+  const messagesWithReadableDate = transformDateToHumanReadable(
+    messagesForChatRoom
+  );
 
   res.status(200).json(messagesWithReadableDate);
 }

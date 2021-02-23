@@ -9,13 +9,12 @@ export async function createChatRoom(req: Request, res: Response) {
     const authorizedUser = res.locals.username;
     const { name, description } = req.body as ChatRoom;
 
-    const emoji = req.body.emoji ?? '🐱‍👓'; // Default emoji for chatroom
-
     if (!name || !description) {
       return res.status(400).json({
         error: `Please provide a name and description for the chat room.`,
       });
     }
+    const emoji = req.body.emoji ?? '🐱‍👓'; // Default emoji for chatroom
 
     const isChatRoomNameTaken = await db
       .collection<ChatRoom>(dataCollection.ChatRooms)
