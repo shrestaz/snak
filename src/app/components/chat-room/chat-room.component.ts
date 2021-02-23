@@ -22,7 +22,7 @@ import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 export class ChatRoomComponent implements OnInit, AfterViewChecked {
   public username = this.authService.usernameFromResponse;
   private roomId!: string;
-  @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
+  @ViewChild('messageList') private myScrollContainer!: ElementRef;
 
   message = new FormControl('', Validators.required);
 
@@ -64,7 +64,6 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
     // .asObservable();
   }
-
   joinRoom() {
     this.socket.emit('connection');
     this.socket.on('message-broadcast', (data: string) => {
