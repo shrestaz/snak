@@ -6,12 +6,14 @@
   <div class="max-w-md w-full space-y-8">
     <div>
       <div
-        class="mx-auto h-12 w-auto text-5xl space-x-3 flex flex-wrap content-center justify-center text-gray-800 font-bold"
+        class="mx-auto h-12 w-auto text-4xl md:text-5xl space-x-3 flex flex-wrap content-center justify-center text-gray-800 font-bold"
       >
         <hero-icon name="chat-alt-2"></hero-icon>
         <span>Snak</span>
       </div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <h2
+        class="md:mt-6 text-center text-2xl md:text-3xl font-extrabold text-gray-900"
+      >
         <span *ngIf="(signUpMessage$ | async)?.success">
           Welcome
           <span class="text-gray-800 bg-blue-200 px-1">{{

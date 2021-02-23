@@ -14,7 +14,6 @@ export interface ChatRoomMessages {
   providedIn: 'root',
 })
 export class ChatService {
-  // public hansBS = new BehaviorSubject<ChatRoomMessages[]>
   constructor(private http: HttpClient, private authService: AuthService) {}
   private baseUrl = environment.apiUrl;
 

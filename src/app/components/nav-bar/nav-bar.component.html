@@ -1,9 +1,8 @@
-<!-- This example requires Tailwind CSS v2.0+ -->
 <nav class="bg-gray-800">
   <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
     <div class="relative flex items-center justify-between h-16">
       <div
-        class="flex-1 flex items-center justify-center lg:items-stretch lg:justify-start sm:items-start"
+        class="flex-1 flex items-center pl-4 sm:pl-0 lg:items-stretch justify-start sm:items-start"
       >
         <a
           class="flex-shrink-0 flex items-center text-white text-3xl font-semibold"
@@ -16,7 +15,6 @@
       <div
         class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
       >
-        <!-- Profile dropdown -->
         <div class="ml-3 flex flex-wrap content-start">
           <div
             *ngIf="username$ | async; else notLoggedIn"
@@ -53,21 +51,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Mobile menu, show/hide based on menu state. -->
-  <!-- <div class="sm:hidden" id="mobile-menu">
-    <div class="px-2 pt-2 pb-3 space-y-1">
-
-      <a
-        href="#"
-        class="bg-gray-900 text-white block px-3 pb-2 rounded-md text-base font-medium"
-      >
-        <hero-icon
-          name="arrow-circle-left-solid"
-          class="hidden lg:block w-auto mr-3 text-3xl pt-1"
-        ></hero-icon
-        >Back to all Chat rooms</a
-      >
-    </div>
-  </div> -->
 </nav>
