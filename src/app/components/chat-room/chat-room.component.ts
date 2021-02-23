@@ -8,7 +8,9 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { io } from 'socket.io-client';
+import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
 import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
 
@@ -18,12 +20,11 @@ import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
   styleUrls: ['./chat-room.component.scss'],
 })
 export class ChatRoomComponent implements OnInit, AfterViewChecked {
+  public username = this.authService.usernameFromResponse;
   private roomId!: string;
   @ViewChild('scrollMe') private myScrollContainer!: ElementRef;
 
-  chatForm = new FormGroup({
-    message: new FormControl('', Validators.required),
-  });
+  message = new FormControl('', Validators.required);
 
   chatMessages$: Observable<ChatRoomMessages[]>;
   roomDetails$: Observable<ChatRoomResponse>;
@@ -33,14 +34,15 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   constructor(
     private route: ActivatedRoute,
     private chatService: ChatService,
-    private roomService: RoomsService
+    private roomService: RoomsService,
+    private authService: AuthService
   ) {
     this.route.params.subscribe((v) => (this.roomId = v.id));
     this.scrollToBottom();
     this.roomDetails$ = this.roomService.getRoomById(this.roomId);
     this.chatMessages$ = this.chatService
       .getChatMessagesByRoomId(this.roomId)
-      .asObservable();
+      .pipe(startWith([]));
   }
 
   ngOnInit() {
@@ -59,9 +61,8 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   }
 
   getChatMessagesByRoom(roomId: string) {
-    this.chatMessages$ = this.chatService
-      .getChatMessagesByRoomId(this.roomId)
-      .asObservable();
+    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
+    // .asObservable();
   }
 
   joinRoom() {
@@ -69,13 +70,14 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.socket.on('message-broadcast', (data: string) => {
       if (data) {
         console.log(`Incoming message: ${JSON.stringify(data)}`);
-        this.chatService.getChatMessagesByRoomId(this.roomId).asObservable();
+        this.chatService.getChatMessagesByRoomId(this.roomId);
+        // .asObservable();
       }
     });
   }
 
   sendMessage() {
-    const message = this.chatForm.controls['message'].value;
+    const message = this.message.value;
     this.chatService.saveChatMessagesByRoomId(this.roomId, message);
     this.socket.emit('message', message);
   }

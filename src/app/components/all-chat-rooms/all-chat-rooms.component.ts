@@ -32,7 +32,7 @@ export class AllChatRoomsComponent {
       let snackBarRef = this.snackbar.open(
         `Please login first to join a chat room`,
         'Login',
-        { duration: 5000 }
+        { duration: 5000, panelClass: ['gray-snackbar'] }
       );
       snackBarRef
         .onAction()

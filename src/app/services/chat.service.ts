@@ -17,27 +17,12 @@ export interface ChatRoomMessages {
 export class ChatService {
   constructor(private http: HttpClient, private authService: AuthService) {}
   private baseUrl = environment.apiUrl;
-  chatRoomMessages = new BehaviorSubject<ChatRoomMessages[]>([]);
 
   getChatMessagesByRoomId(roomId: string) {
     const response = this.http.get(
       `${this.baseUrl}/chatRoomMessages/${roomId}`
-    ) as Observable<ChatRoomMessages>;
-
-    response
-      .pipe(
-        tap((data) =>
-          this.chatRoomMessages.next(
-            this.chatRoomMessages.getValue().concat(data)
-          )
-        ),
-        catchError((err) => {
-          console.log(err);
-          return of(null);
-        })
-      )
-      .subscribe();
-    return this.chatRoomMessages;
+    ) as Observable<ChatRoomMessages[]>;
+    return response;
   }
 
   saveChatMessagesByRoomId(roomId: string, message: string) {
