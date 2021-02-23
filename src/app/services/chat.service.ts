@@ -6,15 +6,16 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { AuthService } from './auth.service';
 
 export interface ChatRoomMessages {
-  message?: string;
-  chatRoomId?: string;
-  from?: string;
-  sentAt?: Date;
+  message: string;
+  chatRoomId: string;
+  from: string;
+  sentAt: Date;
 }
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
+  // public hansBS = new BehaviorSubject<ChatRoomMessages[]>
   constructor(private http: HttpClient, private authService: AuthService) {}
   private baseUrl = environment.apiUrl;
 
@@ -26,7 +27,6 @@ export class ChatService {
   }
 
   saveChatMessagesByRoomId(roomId: string, message: string) {
-    console.log(message);
     const currentUser = this.authService.usernameFromResponse;
     const response = this.http.post(
       `${this.baseUrl}/chatRoomMessages/${roomId}`,

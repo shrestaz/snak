@@ -5,7 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
@@ -61,16 +61,14 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   }
 
   getChatMessagesByRoom(roomId: string) {
-    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
-    // .asObservable();
+    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(roomId);
   }
   joinRoom() {
     this.socket.emit('connection');
     this.socket.on('message-broadcast', (data: string) => {
       if (data) {
         console.log(`Incoming message: ${JSON.stringify(data)}`);
-        this.chatService.getChatMessagesByRoomId(this.roomId);
-        // .asObservable();
+        this.getChatMessagesByRoom(this.roomId);
       }
     });
   }
@@ -79,5 +77,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     const message = this.message.value;
     this.chatService.saveChatMessagesByRoomId(this.roomId, message);
     this.socket.emit('message', message);
+    this.message.reset();
+    this.getChatMessagesByRoom(this.roomId);
   }
 }

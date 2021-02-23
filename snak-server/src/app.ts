@@ -73,11 +73,7 @@ app.post(
 
 io.on('connection', function (socket) {
   console.log('User connected');
-  // socket.on('disconnect', function () {
-  //   console.log('User{} disconnected');
-  // });
   socket.on('message', (message: string) => {
-    console.log(message);
     io.emit('message-broadcast', { message });
   });
 });
