@@ -23,18 +23,32 @@ export class AllChatRoomsComponent {
   }
 
   goToRoom(roomId: string) {
+    const isUserLoggedIn = this.isLoggedIn();
+    if (isUserLoggedIn) {
+      this.router.navigateByUrl(`/room/${roomId}`);
+    }
+  }
+
+  createRoom() {
+    const isUserLoggedIn = this.isLoggedIn();
+    if (isUserLoggedIn) {
+      this.router.navigateByUrl(`/createRoom`);
+    }
+  }
+
+  isLoggedIn() {
     const isUserLoggedIn = this.authService.usernameFromResponse;
     if (!isUserLoggedIn) {
       let snackBarRef = this.snackbar.open(
         `Please login first to join a chat room`,
         'Login',
-        { duration: 5000, panelClass: ['gray-snackbar'] }
+        { duration: 3000, panelClass: ['gray-snackbar'] }
       );
       snackBarRef
         .onAction()
         .subscribe(() => this.router.navigateByUrl('/login'));
-      return;
+      return false;
     }
-    this.router.navigateByUrl(`/room/${roomId}`);
+    return true;
   }
 }

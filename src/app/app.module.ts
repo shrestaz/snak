@@ -15,12 +15,14 @@ import {
   chatAlt2,
   userCircle,
   arrowCircleLeft,
+  x,
 } from 'ng-heroicons';
 import { AllChatRoomsComponent } from './components/all-chat-rooms/all-chat-rooms.component';
 import { ChatRoomComponent } from './components/chat-room/chat-room.component';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateChatRoomComponent } from './components/create-chat-room/create-chat-room.component';
 
 const appRoutes: Routes = [
   { path: '', component: LandingPageComponent },
@@ -28,6 +30,7 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'allRooms', component: AllChatRoomsComponent },
   { path: 'room/:id', component: ChatRoomComponent },
+  { path: 'createRoom', component: CreateChatRoomComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
@@ -40,6 +43,7 @@ const appRoutes: Routes = [
     NavBarComponent,
     AllChatRoomsComponent,
     ChatRoomComponent,
+    CreateChatRoomComponent,
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,7 @@ const appRoutes: Routes = [
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
-    HeroIconsModule.withIcons({ chatAlt2, userCircle, arrowCircleLeft }),
+    HeroIconsModule.withIcons({ chatAlt2, userCircle, arrowCircleLeft, x }),
     MatButtonModule,
     MatSnackBarModule,
   ],

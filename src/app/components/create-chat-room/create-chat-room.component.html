@@ -1,0 +1,103 @@
+<div class="flex-1 sm:pb-6 justify-between flex flex-col h-screen bg-gray-50">
+  <app-nav-bar></app-nav-bar>
+  <div class="h-screen flex flex-col justify-center bg-gray-100 py-6 sm:py-12">
+    <div class="relative py-3 sm:max-w-xl sm:mx-auto">
+      <div
+        class="relative px-4 py-10 bg-white mx-8 md:mx-0 shadow rounded-3xl sm:p-10"
+      >
+        <div class="max-w-md mx-auto">
+          <div class="flex items-center space-x-5">
+            <div
+              class="block pl-2 font-semibold text-xl self-start text-gray-700"
+            >
+              <h2 class="leading-relaxed">Create your own chat room</h2>
+              <p class="text-sm text-gray-500 font-normal leading-relaxed">
+                Define yourself and make friends who share the same taste 👨‍🎤👩‍🎤
+              </p>
+            </div>
+          </div>
+          <form
+            [formGroup]="createRoomForm"
+            (ngSubmit)="onSubmit()"
+            class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7"
+          >
+            <div class="flex flex-col">
+              <label class="leading-loose">Room name*</label>
+              <input
+                type="text"
+                formControlName="name"
+                class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                placeholder="Your chat room name"
+              />
+              <div
+                *ngIf="
+                  submitted && createRoomForm.controls['name'].errors?.required
+                "
+              >
+                <span
+                  class="flex items-center font-medium tracking-wide text-red-500 text-xs my-1 ml-1"
+                >
+                  Please provide a name for the chat room.
+                </span>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <label class="leading-loose">Description*</label>
+              <input
+                type="text"
+                formControlName="description"
+                class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                placeholder="Describe your chat room"
+              />
+              <div
+                *ngIf="
+                  submitted &&
+                  createRoomForm.controls['description'].errors?.required
+                "
+              >
+                <span
+                  class="flex items-center font-medium tracking-wide text-red-500 text-xs my-1 ml-1"
+                >
+                  Please provide a description about the chat room.
+                </span>
+              </div>
+            </div>
+            <div class="flex flex-col">
+              <label class="leading-loose">Set an emoji</label>
+              <input
+                type="text"
+                formControlName="emoji"
+                class="px-4 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
+                placeholder="Attract others with your emoji 🤓"
+              />
+            </div>
+            <span class="text-xs">* Required fields</span>
+            <div *ngIf="submitted && error">
+              <span
+                class="flex items-center font-medium tracking-wide text-red-500 text-xs my-1 ml-1"
+              >
+                {{ error }}
+              </span>
+            </div>
+          </form>
+          <div class="pt-4 flex items-center space-x-4">
+            <button
+              [routerLink]="'/allRooms'"
+              class="flex justify-center items-center w-full text-gray-900 px-4 py-3 rounded-md focus:outline-none hover:bg-gray-50"
+            >
+              <hero-icon name="x" class="lg:block h-8 mr-3"></hero-icon>
+              Cancel
+            </button>
+            <button
+              type="submit"
+              (click)="onSubmit()"
+              class="bg-blue-500 flex justify-center items-center w-full text-white px-4 py-3 rounded-md focus:outline-none hover:bg-blue-600"
+            >
+              Create
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,6 +8,7 @@ export function authentication(
   next: NextFunction
 ) {
   const tokenInHeader = req.headers.authorization;
+  console.log(tokenInHeader);
   if (!tokenInHeader) {
     return res.status(401).send('Authorization token missing.');
   }

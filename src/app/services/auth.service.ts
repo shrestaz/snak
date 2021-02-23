@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -69,12 +69,23 @@ export class AuthService {
         }),
         catchError((data) => {
           this.signUpResponse.next(data.error);
-          success = false;
           return of();
         })
       )
       .subscribe();
     return success;
+  }
+
+  public getHeaderWithAuth() {
+    const accessToken = this.accessToken;
+    if (!accessToken) {
+      throw new Error('asd');
+    }
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
+    });
+    return headers;
   }
 
   public login(user: User) {

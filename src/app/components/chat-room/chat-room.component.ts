@@ -12,7 +12,7 @@ import { startWith } from 'rxjs/operators';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
-import { ChatRoomResponse, RoomsService } from 'src/app/services/rooms.service';
+import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
 
 @Component({
   selector: 'app-chat-room',
@@ -27,7 +27,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   message = new FormControl('', Validators.required);
 
   chatMessages$: Observable<ChatRoomMessages[]>;
-  roomDetails$: Observable<ChatRoomResponse>;
+  roomDetails$: Observable<ChatRoom>;
 
   socket = io('http://localhost:3000');
 
@@ -67,7 +67,6 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.socket.emit('connection');
     this.socket.on('message-broadcast', (data: string) => {
       if (data) {
-        console.log(`Incoming message: ${JSON.stringify(data)}`);
         this.getChatMessagesByRoom(this.roomId);
       }
     });

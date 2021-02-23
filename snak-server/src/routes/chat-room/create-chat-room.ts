@@ -7,12 +7,14 @@ export async function createChatRoom(req: Request, res: Response) {
   try {
     const db = await getDb();
     const authorizedUser = res.locals.username;
-    const { name, description, emoji } = req.body as ChatRoom;
+    const { name, description } = req.body as ChatRoom;
+
+    const emoji = req.body.emoji ?? '🐱‍👓'; // Default emoji for chatroom
 
     if (!name || !description) {
-      return res
-        .status(400)
-        .send(`Please provide a name and description for the chat room.`);
+      return res.status(400).json({
+        error: `Please provide a name and description for the chat room.`,
+      });
     }
 
     const isChatRoomNameTaken = await db
@@ -20,11 +22,9 @@ export async function createChatRoom(req: Request, res: Response) {
       .findOne({ name });
 
     if (isChatRoomNameTaken) {
-      return res
-        .status(400)
-        .send(
-          `Room name "${name}" is already taken. Please choose a different name.`
-        );
+      return res.status(400).json({
+        error: `Room name "${name}" is already taken. Please choose a different name.`,
+      });
     }
 
     const insertResult = await db
@@ -38,11 +38,13 @@ export async function createChatRoom(req: Request, res: Response) {
     console.log(
       `Chat room created with name ${name} and id ${insertResult.insertedId}`
     );
-    return res.status(201).send(`Chat room "${name}" successfully created.`);
+    return res
+      .status(201)
+      .json({ message: `Chat room "${name}" successfully created.` });
   } catch (error) {
     console.log(error.message);
-    return res
-      .status(500)
-      .send(`Creating a chat room failed unexpected with ${error.message}`);
+    return res.status(500).json({
+      error: `Creating a chat room failed unexpected with ${error.message}`,
+    });
   }
 }
