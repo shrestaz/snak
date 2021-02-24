@@ -8,7 +8,6 @@ import {
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
@@ -40,9 +39,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.route.params.subscribe((v) => (this.roomId = v.id));
     this.scrollToBottom();
     this.roomDetails$ = this.roomService.getRoomById(this.roomId);
-    this.chatMessages$ = this.chatService
-      .getChatMessagesByRoomId(this.roomId)
-      .pipe(startWith([]));
+    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
   }
 
   ngOnInit() {
