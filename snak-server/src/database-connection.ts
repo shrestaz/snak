@@ -1,6 +1,5 @@
 import { Db, MongoClient } from 'mongodb';
 
-// Replace the uri string with your MongoDB deployment's connection string.
 const uri = process.env.CONNECTION_STRING ?? 'unknown';
 
 let db: Db;

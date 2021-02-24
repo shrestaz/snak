@@ -1,11 +1,13 @@
 import { Request, Response } from 'express';
 import { getDb } from '../../database-connection';
-import { ChatRoomDB } from '../../interfaces/chat-room';
 import { dataCollection } from '../../enum/data-collection';
+import { ChatRoomDB } from '../../interfaces/chat-room';
 
 export async function getAllChatRooms(req: Request, res: Response) {
   try {
     const db = await getDb();
+
+    // aggregation to fetch all chat rooms with message count
     const allChatRooms = await db
       .collection<ChatRoomDB>(dataCollection.ChatRooms)
       .aggregate([

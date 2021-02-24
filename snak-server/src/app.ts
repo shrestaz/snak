@@ -1,20 +1,19 @@
 require('dotenv').config();
 
 import { json } from 'body-parser';
-import express, { Application, Request, Response } from 'express';
-import { Db } from 'mongodb';
-import { login } from './routes/authentication/login';
-import { signUp } from './routes/authentication/sign-up';
-import { initDb } from './database-connection';
-import { getAllChatRooms } from './routes/chat-room/get-all-chat-rooms';
-import { createChatRoom } from './routes/chat-room/create-chat-room';
-import { authentication } from './middleware/authentication';
 import cors from 'cors';
+import express, { Request, Response } from 'express';
 import { Server } from 'http';
 import { Socket } from 'socket.io';
+import { initDb } from './database-connection';
+import { authentication } from './middleware/authentication';
+import { login } from './routes/authentication/login';
+import { signUp } from './routes/authentication/sign-up';
+import { createChatRoom } from './routes/chat-room/create-chat-room';
+import { getAllChatRooms } from './routes/chat-room/get-all-chat-rooms';
+import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
 import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
-import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 
 const app = express();
 app.use(cors());

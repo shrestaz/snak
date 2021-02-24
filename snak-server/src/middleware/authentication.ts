@@ -8,7 +8,6 @@ export function authentication(
   next: NextFunction
 ) {
   const tokenInHeader = req.headers.authorization;
-  console.log(tokenInHeader);
   if (!tokenInHeader) {
     return res.status(401).send('Authorization token missing.');
   }
@@ -19,13 +18,15 @@ export function authentication(
     return res.status(500).send(`JWT_KEY not found.`);
   }
   try {
+    // Split access token "Bearer token
     const accessToken = tokenInHeader.split(' ')[1];
     const decodedToken = verify(accessToken, jwtKey) as JwtTokenPayload;
-    console.log(decodedToken);
     const username = decodedToken.username;
     if (!username) {
       return res.send(401).send(`Invalid request.`);
     }
+
+    // Append username to the response so endpoints can access it
     res.locals.username = username;
     next();
   } catch (error) {

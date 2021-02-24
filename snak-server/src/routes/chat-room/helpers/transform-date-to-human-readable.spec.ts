@@ -15,8 +15,8 @@ describe('transformDateToHumanReadable', () => {
     ] as any;
     const actualResult = transformDateToHumanReadable(messages);
     const expectedResult = [
-      { messageText: 'Message1', sentAt: '19:13 on 2/2/2021' },
-      { messageText: 'Second message', sentAt: '19:27 on 2/2/2021' },
+      { messageText: 'Message1', sentAt: '19:13 on 23/2/2021' },
+      { messageText: 'Second message', sentAt: '19:27 on 23/2/2021' },
     ];
     expect(actualResult).toEqual(expectedResult);
   });

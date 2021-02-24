@@ -1,7 +1,7 @@
-import { getDb } from '../../database-connection';
 import { Request, Response } from 'express';
-import { MessageDB } from '../../interfaces/message';
+import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
+import { MessageDB } from '../../interfaces/message';
 import { transformDateToHumanReadable } from './helpers/transform-date-to-human-readable';
 
 export async function getMessagesForChatRoom(req: Request, res: Response) {

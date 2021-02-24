@@ -1,8 +1,8 @@
-import { getDb } from '../../database-connection';
 import { Request, Response } from 'express';
-import { ChatRoomDB } from '../../interfaces/chat-room';
-import { dataCollection } from '../../enum/data-collection';
 import { ObjectId } from 'mongodb';
+import { getDb } from '../../database-connection';
+import { dataCollection } from '../../enum/data-collection';
+import { ChatRoomDB } from '../../interfaces/chat-room';
 
 export async function getChatRoomById(req: Request, res: Response) {
   const db = await getDb();

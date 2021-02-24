@@ -1,9 +1,9 @@
-import { Response, Request } from 'express';
+import { compare } from 'bcrypt';
+import { Request, Response } from 'express';
+import { sign } from 'jsonwebtoken';
 import { getDb } from '../../database-connection';
 import { User } from '../../interfaces/user';
 import { getExistingUser } from './helpers/get-existing-user';
-import { compare } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
 
 export async function login(req: Request, res: Response) {
   const db = await getDb();

@@ -1,16 +1,20 @@
-import { Request, Response } from 'express';
 import { hash } from 'bcrypt';
+import { Request, Response } from 'express';
 import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
+import { UserSignUpInput } from '../../interfaces/user';
 import { getExistingUser } from './helpers/get-existing-user';
 import { signupPasswordMatch } from './helpers/signup-password-match';
-import { UserSignUpInput } from '../../interfaces/user';
 
 export async function signUp(req: Request, res: Response) {
   const db = await getDb();
   try {
     // extract username and password from request body
     const { username, password, confirmPassword } = req.body as UserSignUpInput;
+
+    if (!username || !password || !confirmPassword) {
+      res.status(400).send(`Bad request. Please provide all the fields.`);
+    }
 
     // Sanity checks
     const userExists = await getExistingUser(username, db);
