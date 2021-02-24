@@ -1,11 +1,14 @@
 {
   "name": "snak",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "postinstall": "ng build --prod"
+    "start": "ng serve & cd snak-server && npm start",
+    "build": "ng build --prod",
+    "install:all": "npm install & cd snak-server && npm install"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "private": true,
   "dependencies": {
