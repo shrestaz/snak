@@ -28,6 +28,7 @@ _This application was built on a UNIX-compliant system and assumes you are runni
    - Complete path to `.env` file is `snak/snak-server/.env`
 5. Populate with secrets provided to you
 6. From root of the project, start the application: `npm start`
+   - Wait for both server and client to be built.
 7. In your browser, access the application at `localhost:4200`
 8. Profit!
 

@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
 import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
-import { ChatRoom } from '../../interfaces/chat-room';
+import { ChatRoom, ChatRoomDB } from '../../interfaces/chat-room';
+import { isChatRoomNameTaken } from './helpers/is-chat-room-name-taken';
 
 export async function createChatRoom(req: Request, res: Response) {
   try {
     const db = await getDb();
+
+    // Extract username from response whic authentication middleware sets
     const authorizedUser = res.locals.username;
     const { name, description } = req.body as ChatRoom;
 
@@ -16,18 +19,16 @@ export async function createChatRoom(req: Request, res: Response) {
     }
     const emoji = req.body.emoji ?? '🐱‍👓'; // Default emoji for chatroom
 
-    const isChatRoomNameTaken = await db
-      .collection<ChatRoom>(dataCollection.ChatRooms)
-      .findOne({ name });
+    const roomNameTaken = await isChatRoomNameTaken(name, db);
 
-    if (isChatRoomNameTaken) {
+    if (roomNameTaken) {
       return res.status(400).json({
         error: `Room name "${name}" is already taken. Please choose a different name.`,
       });
     }
 
     const insertResult = await db
-      .collection<ChatRoom>(dataCollection.ChatRooms)
+      .collection<ChatRoomDB>(dataCollection.ChatRooms)
       .insertOne({
         name,
         description,

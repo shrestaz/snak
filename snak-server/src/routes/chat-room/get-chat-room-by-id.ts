@@ -11,6 +11,7 @@ export async function getChatRoomById(req: Request, res: Response) {
   const chatRoom = await db
     .collection<ChatRoomDB>(dataCollection.ChatRooms)
     .findOne({ _id: new ObjectId(chatRoomId) });
+
   if (!chatRoom) {
     return res.status(404).json({
       message: `Chat room with id ${chatRoomId} not found`,

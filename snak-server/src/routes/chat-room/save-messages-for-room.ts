@@ -6,6 +6,8 @@ import { Message, MessageDB } from '../../interfaces/message';
 export async function saveMessagesForChatRoom(req: Request, res: Response) {
   const db = await getDb();
   const { message, chatRoomId, from, sentAt } = req.body as Message;
+
+  // Only save messages if it exists on the request body
   if (message) {
     await db
       .collection<MessageDB>(dataCollection.Messages)

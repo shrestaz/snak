@@ -40,6 +40,7 @@ export async function getAllChatRooms(req: Request, res: Response) {
       ])
       .toArray();
 
+    // Convert rooms _id of type ObjectID to string Ids
     const allChatRoomsWithStringId = allChatRooms.map((v) => ({
       ...v,
       _id: v._id.toHexString(),

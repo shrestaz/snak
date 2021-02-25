@@ -12,6 +12,7 @@ import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
 import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-chat-room',
@@ -28,7 +29,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   chatMessages$: Observable<ChatRoomMessages[]>;
   roomDetails$: Observable<ChatRoom>;
 
-  socket = io('http://localhost:3000');
+  socket = io(environment.apiUrl);
 
   constructor(
     private route: ActivatedRoute,
