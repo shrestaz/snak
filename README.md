@@ -1,6 +1,6 @@
-# Snak
+# [Snak](https://snak.vercel.app/)
 
-## Welcome to Snak. A chat app built to connect you to the world.
+## Welcome to [Snak](https://snak.vercel.app/). A chat app built to connect you to the world.
 
 "_Det at nogen snakker venskabeligt, afslappet eller uformelt med nogen_" - [Den Danske Ordbog](https://ordnet.dk/ddo/ordbog?query=snak)
 
