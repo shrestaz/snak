@@ -16,6 +16,16 @@ This is a chat application built with MEAN stack fully developed with TypeScript
 - Send and receive messages in the chat room you have joined (powered by [socket.io](https://socket.io/))
 - Persistent messages and users
 
+### Screenshots
+
+**[All screenshots](https://imgur.com/gallery/02jE89d)**
+
+<kbd><img src="https://github.com/shrestaz/snak/blob/master/screenshots/landing-page.png" width=500></kbd>
+
+
+### Demo
+<img src="https://github.com/shrestaz/snak/blob/master/screenshots/demo.gif">
+
 ### Steps to run locally:
 
 _This application was built on a UNIX-compliant system and assumes you are running it on one as well. Linux, WSL and MacOS are supported._
