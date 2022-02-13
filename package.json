@@ -7,9 +7,6 @@
     "build": "ng build --prod",
     "postinstall": "cd snak-server/ && npm install"
   },
-  "engines": {
-    "node": "14.x"
-  },
   "private": true,
   "dependencies": {
     "@angular/animations": "^11.2.1",
