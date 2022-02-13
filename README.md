@@ -4,7 +4,7 @@
 
 "_Det at nogen snakker venskabeligt, afslappet eller uformelt med nogen_" - [Den Danske Ordbog](https://ordnet.dk/ddo/ordbog?query=snak)
 
-This is a chat application built with MEAN stack fully developed with TypeScript. It is fully responsive powered by [Angular](https://angular.io/) and [Tailwind CSS](https://tailwindcss.com/).
+This is a chat application built with MEAN stack fully developed with TypeScript. It is fully responsive built on [Angular 13](https://angular.io/) and powered by [Tailwind CSS](https://tailwindcss.com/).
 
 ### Features:
 
@@ -22,15 +22,15 @@ This is a chat application built with MEAN stack fully developed with TypeScript
 
 <kbd><img src="https://github.com/shrestaz/snak/blob/master/screenshots/landing-page.png" width=500></kbd>
 
-
 ### Demo
+
 <img src="https://github.com/shrestaz/snak/blob/master/screenshots/demo.gif">
 
 ### Steps to run locally:
 
 _This application was built on a UNIX-compliant system and assumes you are running it on one as well. Linux, WSL and MacOS are supported._
 
-0. **IMPORTANT**: Make sure you have LTS version of Node.js with npm version npm 6.14.xx. Angular has issues with npm version 7.xx. [Link to issue](https://github.com/angular/angular-cli/issues/19957)
+0. Have Node.js installed.
 1. Clone the repository: `git clone https://github.com/shrestaz/snak.git`
 2. Navigate into the folder: `cd snak`
 3. Install dependencies: `npm install`
