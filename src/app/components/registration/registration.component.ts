@@ -3,11 +3,8 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {
-  AuthService,
-  SignUpResponse,
-  UserSignUp,
-} from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { SignUpResponse, UserSignUp } from '../../interfaces/auth';
 
 @Component({
   selector: 'app-registration',

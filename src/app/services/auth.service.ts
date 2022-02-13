@@ -3,30 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-
-export interface User {
-  username: string;
-  password: string;
-}
-export interface UserSignUp extends User {
-  confirmPassword: string;
-}
-
-export interface AuthenticationResponse {
-  accessToken: string;
-  username: string;
-}
-
-export interface SignUpResponse {
-  success?: boolean;
-  username?: string;
-  error?: string;
-}
-
-export interface LoginResponse {
-  error?: string;
-  success?: boolean;
-}
+import {
+  AuthenticationResponse,
+  LoginResponse,
+  SignUpResponse,
+  UserSignUp,
+} from '../interfaces/auth';
+import { User } from '../../../snak-server/src/interfaces/user';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
@@ -40,19 +24,19 @@ export class AuthService {
   set usernameFromResponse(value) {
     this.username.next(value);
     if (value) {
-      localStorage.setItem('username', value);
+      this.cookieService.set('username', value, 30, '/');
     }
   }
 
-  get usernameFromResponse() {
-    return localStorage.getItem('username');
+  get usernameFromResponse(): string | null {
+    return this.cookieService.get('username');
   }
 
   get accessToken() {
-    return localStorage.getItem('accessToken');
+    return this.cookieService.get('accessToken');
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   public signUp(user: UserSignUp) {
     let success: boolean = false;
@@ -79,7 +63,7 @@ export class AuthService {
   public getHeaderWithAuth() {
     const accessToken = this.accessToken;
     if (!accessToken) {
-      throw new Error('asd');
+      throw new Error('Access token not found.');
     }
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -102,8 +86,8 @@ export class AuthService {
           this.loginResponse.next({ success: true });
           success = true;
           this.usernameFromResponse = res.username;
-          localStorage.setItem('username', res.username);
-          localStorage.setItem('accessToken', res.accessToken);
+          this.cookieService.set('username', res.username, 30, '/');
+          this.cookieService.set('accessToken', res.accessToken, 30, '/');
         }),
         catchError((data) => {
           this.loginResponse.next({ success: false, error: data.error.error });
@@ -116,7 +100,7 @@ export class AuthService {
   }
 
   public logout() {
-    localStorage.clear();
+    this.cookieService.deleteAll();
     this.usernameFromResponse = null;
   }
 }
