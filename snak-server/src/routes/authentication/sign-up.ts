@@ -37,7 +37,7 @@ export async function signUp(req: Request, res: Response) {
     const result = await db
       .collection(dataCollection.Users)
       .insertOne({ username, password: hashedPassword });
-    if (result.result.ok) {
+    if (result.insertedId) {
       console.log(
         `User successfull created with username ${username} and id ${result.insertedId}`
       );

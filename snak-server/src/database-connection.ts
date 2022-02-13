@@ -6,7 +6,6 @@ let db: Db;
 
 export async function initDb() {
   const client = new MongoClient(uri, {
-    useUnifiedTopology: true,
     connectTimeoutMS: 30000,
     keepAlive: true,
   });

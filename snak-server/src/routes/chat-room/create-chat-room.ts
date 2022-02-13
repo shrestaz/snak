@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
-import { ChatRoom, ChatRoomDB } from '../../interfaces/chat-room';
+import { ChatRoom } from '../../interfaces/chat-room';
 import { isChatRoomNameTaken } from './helpers/is-chat-room-name-taken';
 
 export async function createChatRoom(req: Request, res: Response) {
@@ -17,7 +17,7 @@ export async function createChatRoom(req: Request, res: Response) {
         error: `Please provide a name and description for the chat room.`,
       });
     }
-    const emoji = req.body.emoji ?? '🐱‍👓'; // Default emoji for chatroom
+    const emoji = req.body.emoji;
 
     const roomNameTaken = await isChatRoomNameTaken(name, db);
 
@@ -28,7 +28,7 @@ export async function createChatRoom(req: Request, res: Response) {
     }
 
     const insertResult = await db
-      .collection<ChatRoomDB>(dataCollection.ChatRooms)
+      .collection<ChatRoom>(dataCollection.ChatRooms)
       .insertOne({
         name,
         description,

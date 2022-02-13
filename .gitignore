@@ -47,3 +47,5 @@ testem.log
 Thumbs.db
 node_modules
 snak-server/.env
+
+.angular

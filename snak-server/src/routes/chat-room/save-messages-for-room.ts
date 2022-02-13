@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
-import { Message, MessageDB } from '../../interfaces/message';
+import { Message } from '../../interfaces/message';
 
 export async function saveMessagesForChatRoom(req: Request, res: Response) {
   const db = await getDb();
@@ -10,7 +10,7 @@ export async function saveMessagesForChatRoom(req: Request, res: Response) {
   // Only save messages if it exists on the request body
   if (message) {
     await db
-      .collection<MessageDB>(dataCollection.Messages)
+      .collection<Message>(dataCollection.Messages)
       .insertOne({ message, chatRoomId, from, sentAt });
 
     res.status(201).json({ message: `Saved.` });
