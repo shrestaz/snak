@@ -45,7 +45,6 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.joinRoom();
-    this.socket.on('new-message', (data: string) => {});
   }
 
   ngAfterViewChecked() {
@@ -54,13 +53,15 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
 
   scrollToBottom(): void {
     try {
-      this.myScrollContainer.nativeElement.scrollTop = this.myScrollContainer.nativeElement.scrollHeight;
+      this.myScrollContainer.nativeElement.scrollTop =
+        this.myScrollContainer.nativeElement.scrollHeight;
     } catch (err) {}
   }
 
   getChatMessagesByRoom(roomId: string) {
     this.chatMessages$ = this.chatService.getChatMessagesByRoomId(roomId);
   }
+
   joinRoom() {
     this.socket.emit('connection');
     this.socket.on('message-broadcast', (data: string) => {
@@ -76,7 +77,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
       this.chatService.saveChatMessagesByRoomId(this.roomId, message);
       this.socket.emit('message', message);
       this.message.reset();
-      this.getChatMessagesByRoom(this.roomId);
     }
+  }
+
+  trackByFunction(index: number, chatMessage: ChatRoomMessages) {
+    return chatMessage.message;
   }
 }
