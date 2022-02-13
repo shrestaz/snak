@@ -21,7 +21,7 @@ export class CreateChatRoomComponent {
   createRoomForm = new FormGroup({
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
-    emoji: new FormControl(''),
+    emoji: new FormControl('😶‍🌫️'),
   });
 
   constructor(
@@ -30,7 +30,8 @@ export class CreateChatRoomComponent {
     private router: Router,
     private snackbar: MatSnackBar
   ) {
-    this.createRoomResponse$ = this.roomService.createRoomResponse.asObservable();
+    this.createRoomResponse$ =
+      this.roomService.createRoomResponse.asObservable();
   }
 
   onSubmit() {
