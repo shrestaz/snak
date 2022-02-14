@@ -31,7 +31,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   chatMessages$ = this.chatMessages.asObservable();
   roomDetails$: Observable<ChatRoom>;
 
-  socket = io(environment.apiUrl);
+  socket = io(environment.apiUrl, { forceNew: true });
 
   constructor(
     private route: ActivatedRoute,
