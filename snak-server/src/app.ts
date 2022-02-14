@@ -73,7 +73,7 @@ app.post(
 
 io.on('connection', function (socket) {
   console.log('User connected');
-  socket.on('successful', () => {
-    io.emit('connection-successful', { success: true });
-  });
+  // socket.on('successful', () => {
+  io.emit('connection-successful', { success: true });
+  // });
 });
