@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { Socket } from 'socket.io';
-import { DefaultEventsMap } from 'socket.io/dist/typed-events';
 import { getDb } from '../../database-connection';
 import { dataCollection } from '../../enum/data-collection';
 import { Message } from '../../interfaces/message';
@@ -9,7 +8,7 @@ import { transformDateToHumanReadable } from './helpers/transform-date-to-human-
 export async function saveMessagesForChatRoom(
   req: Request,
   res: Response,
-  io: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>
+  io: Socket
 ) {
   const db = await getDb();
   const { message, chatRoomId, from, sentAt } = req.body as Message;
