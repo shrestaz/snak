@@ -9,7 +9,6 @@ export interface ChatRoomMessages {
   chatRoomId: string;
   from: string;
   sentAt: Date;
-  _id: string;
 }
 @Injectable({
   providedIn: 'root',

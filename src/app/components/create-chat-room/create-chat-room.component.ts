@@ -54,7 +54,9 @@ export class CreateChatRoomComponent {
     this.createRoomResponse$
       .pipe(
         tap((v) => {
+          console.log(v);
           if (v.success) {
+            console.log('asdasd');
             this.router.navigateByUrl('/allRooms');
             this.snackbar.open(
               `Chat room ${name} successfully created 🎉`,
