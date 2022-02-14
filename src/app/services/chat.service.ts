@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
+import { Socket } from 'socket.io-client';
 
 export interface ChatRoomMessages {
   message: string;
@@ -25,12 +26,19 @@ export class ChatService {
     return response;
   }
 
-  saveChatMessagesByRoomId(roomId: string, message: string) {
+  saveChatMessagesByRoomId(roomId: string, message: string, socket: Socket) {
     const currentUser = this.authService.usernameFromResponse;
+    const enrichedMessage = {
+      message,
+      chatRoomId: roomId,
+      from: currentUser,
+      sentAt: new Date(),
+    };
     const response = this.http.post(
       `${this.baseUrl}/chatRoomMessages/${roomId}`,
-      { message, chatRoomId: roomId, from: currentUser, sentAt: new Date() }
+      enrichedMessage
     ) as Observable<ChatRoomMessages>;
+    socket.emit('message', enrichedMessage);
     response.subscribe();
   }
 }

@@ -5,7 +5,9 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { Server } from 'http';
 import { Socket } from 'socket.io';
-import { initDb } from './database-connection';
+import { getDb, initDb } from './database-connection';
+import { dataCollection } from './enum/data-collection';
+import { Message } from './interfaces/message';
 import { authentication } from './middleware/authentication';
 import { login } from './routes/authentication/login';
 import { signUp } from './routes/authentication/sign-up';
@@ -13,6 +15,7 @@ import { createChatRoom } from './routes/chat-room/create-chat-room';
 import { getAllChatRooms } from './routes/chat-room/get-all-chat-rooms';
 import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
+import { transformDateToHumanReadable } from './routes/chat-room/helpers/transform-date-to-human-readable';
 import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
 
 const app = express();
@@ -67,13 +70,24 @@ app.get(
 
 app.post(
   '/chatRoomMessages/:chatRoomId',
-  async (req: Request, res: Response) =>
-    await saveMessagesForChatRoom(req, res, io)
+  async (req: Request, res: Response) => await saveMessagesForChatRoom(req, res)
 );
 
 io.on('connection', function (socket) {
   console.log('User connected');
-  // socket.on('successful', () => {
-  io.emit('connection-successful', { success: true });
-  // });
+  socket.on('successful', () => {
+    io.emit('connection-successful', { success: true });
+  });
+  socket.on('message', async (rawMessage: Message) => {
+    const db = await getDb();
+    const { message, chatRoomId, from, sentAt } = rawMessage;
+    const { insertedId: _id } = await db
+      .collection<Message>(dataCollection.Messages)
+      .insertOne({ message, chatRoomId, from, sentAt });
+    const enrichedMessage = transformDateToHumanReadable([
+      { _id, ...rawMessage },
+    ])[0];
+    console.log(enrichedMessage);
+    io.emit('message-broadcast', { ...enrichedMessage });
+  });
 });
