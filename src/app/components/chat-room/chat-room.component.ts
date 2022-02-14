@@ -80,10 +80,9 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     if (message) {
       this.chatService.saveChatMessagesByRoomId(this.roomId, message);
       this.socket.emit('message', message);
-      this.socket.on('new-message', (message) => {
-        console.log(message);
-        return this.chatMessages.next([...this.chatMessages.value, message]);
-      });
+      this.socket.on('new-message', (message) =>
+        this.chatMessages.next([...this.chatMessages.value, message])
+      );
       this.message.reset();
     }
   }
