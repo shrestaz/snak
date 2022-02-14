@@ -67,12 +67,13 @@ app.get(
 
 app.post(
   '/chatRoomMessages/:chatRoomId',
-  async (req: Request, res: Response) => await saveMessagesForChatRoom(req, res)
+  async (req: Request, res: Response) =>
+    await saveMessagesForChatRoom(req, res, io)
 );
 
 io.on('connection', function (socket) {
   console.log('User connected');
-  socket.on('message', (message: string) => {
-    io.emit('message-broadcast', { message });
+  socket.on('successful', () => {
+    io.emit('connection-successful', { success: true });
   });
 });

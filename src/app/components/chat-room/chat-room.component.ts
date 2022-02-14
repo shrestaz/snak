@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
 import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
@@ -25,8 +25,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   @ViewChild('messageList') private myScrollContainer!: ElementRef;
 
   message = new FormControl('', Validators.required);
-
-  chatMessages$: Observable<ChatRoomMessages[]>;
+  chatMessages: BehaviorSubject<ChatRoomMessages[]> = new BehaviorSubject<
+    ChatRoomMessages[]
+  >([]);
+  chatMessages$ = this.chatMessages.asObservable();
   roomDetails$: Observable<ChatRoom>;
 
   socket = io(environment.apiUrl);
@@ -40,7 +42,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.route.params.subscribe((v) => (this.roomId = v.id));
     this.scrollToBottom();
     this.roomDetails$ = this.roomService.getRoomById(this.roomId);
-    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
+    this.getChatMessagesByRoom(this.roomId);
   }
 
   ngOnInit() {
@@ -59,13 +61,15 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   }
 
   getChatMessagesByRoom(roomId: string) {
-    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(roomId);
+    this.chatService
+      .getChatMessagesByRoomId(roomId)
+      .subscribe((messages) => this.chatMessages.next(messages));
   }
 
   joinRoom() {
     this.socket.emit('connection');
-    this.socket.on('message-broadcast', (data: string) => {
-      if (data) {
+    this.socket.on('connection-successful', (success: boolean) => {
+      if (success) {
         this.getChatMessagesByRoom(this.roomId);
       }
     });
@@ -76,6 +80,9 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     if (message) {
       this.chatService.saveChatMessagesByRoomId(this.roomId, message);
       this.socket.emit('message', message);
+      this.socket.on('new-message', (message) =>
+        this.chatMessages.next([...this.chatMessages.value, message])
+      );
       this.message.reset();
     }
   }
