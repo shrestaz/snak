@@ -16,6 +16,7 @@ import {
   userCircle,
   arrowCircleLeft,
   x,
+  logout,
 } from 'ng-heroicons';
 import { AllChatRoomsComponent } from './components/all-chat-rooms/all-chat-rooms.component';
 import { ChatRoomComponent } from './components/chat-room/chat-room.component';
@@ -53,7 +54,13 @@ const appRoutes: Routes = [
     AppRoutingModule,
     RouterModule.forRoot(appRoutes),
     ReactiveFormsModule,
-    HeroIconsModule.withIcons({ chatAlt2, userCircle, arrowCircleLeft, x }),
+    HeroIconsModule.withIcons({
+      chatAlt2,
+      userCircle,
+      arrowCircleLeft,
+      x,
+      logout,
+    }),
     MatButtonModule,
     MatSnackBarModule,
   ],
