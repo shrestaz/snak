@@ -10,10 +10,14 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
-import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
+import { ChatService } from 'src/app/services/chat.service';
 import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
 import { environment } from 'src/environments/environment';
-import { transformDateToHumanReadable } from '../../utils/transform-date-to-human-readable';
+import { transformDateToHumanReadable } from '../../../../snak-server/src/routes/chat-room/helpers/transform-date-to-human-readable';
+import {
+  ChatRoomMessage,
+  ChatRoomMessageEnriched,
+} from '../../interfaces/chat-room-message';
 
 @Component({
   selector: 'app-chat-room',
@@ -26,9 +30,8 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   @ViewChild('messageList') private myScrollContainer!: ElementRef;
 
   message = new FormControl('', Validators.required);
-  chatMessages: BehaviorSubject<ChatRoomMessages[]> = new BehaviorSubject<
-    ChatRoomMessages[]
-  >([]);
+  chatMessages: BehaviorSubject<ChatRoomMessageEnriched[]> =
+    new BehaviorSubject<ChatRoomMessageEnriched[]>([]);
 
   chatMessages$ = this.chatMessages.asObservable();
   roomDetails$: Observable<ChatRoom>;
@@ -65,7 +68,9 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   getChatMessagesByRoom(roomId: string) {
     this.chatService
       .getChatMessagesByRoomId(roomId)
-      .subscribe((messages) => this.chatMessages.next(messages));
+      .subscribe((messages) =>
+        this.chatMessages.next(transformDateToHumanReadable(messages))
+      );
   }
 
   joinRoom() {
@@ -81,7 +86,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     const message = this.message.value as string;
     const currentUser = this.authService.usernameFromResponse;
     if (message && currentUser) {
-      const enrichedMessage: ChatRoomMessages = {
+      const enrichedMessage: ChatRoomMessage = {
         message,
         chatRoomId: this.roomId,
         from: currentUser,
@@ -91,13 +96,13 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
       this.socket.emit('message', enrichedMessage);
       this.chatMessages.next([
         ...this.chatMessages.value,
-        transformDateToHumanReadable(enrichedMessage),
+        transformDateToHumanReadable([enrichedMessage])[0],
       ]);
       this.message.reset();
     }
   }
 
-  trackByFunction(index: number, chatMessage: ChatRoomMessages) {
+  trackByFunction(index: number, chatMessage: ChatRoomMessageEnriched) {
     return chatMessage.message;
   }
 }
