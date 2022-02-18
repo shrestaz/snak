@@ -17,6 +17,7 @@ import {
 } from 'src/app/services/chat.service';
 import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
 import { environment } from 'src/environments/environment';
+import { transformDateToHumanReadable } from '../../utils/transform-date-to-human-readable';
 
 @Component({
   selector: 'app-chat-room',
@@ -91,9 +92,10 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
         sentAt: new Date(),
       };
       this.socket.emit('message', enrichedMessage);
-      this.socket.on('message-broadcast', (message) =>
-        this.chatMessages.next([...this.chatMessages.value, message])
-      );
+      this.chatMessages.next([
+        ...this.chatMessages.value,
+        transformDateToHumanReadable(enrichedMessage),
+      ]);
       this.message.reset();
     }
   }
