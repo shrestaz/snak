@@ -3,7 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { ChatRoomMessage } from '../interfaces/chat-room-message';
+import {
+  ChatRoomMessage,
+  ChatRoomMessageEnriched,
+} from '../interfaces/chat-room-message';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +18,7 @@ export class ChatService {
   getChatMessagesByRoomId(roomId: string) {
     const response = this.http.get(
       `${this.baseUrl}/chatRoomMessages/${roomId}`
-    ) as Observable<ChatRoomMessage[]>;
+    ) as Observable<ChatRoomMessageEnriched[]>;
     return response;
   }
 

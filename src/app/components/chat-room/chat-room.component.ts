@@ -68,9 +68,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   getChatMessagesByRoom(roomId: string) {
     this.chatService
       .getChatMessagesByRoomId(roomId)
-      .subscribe((messages) =>
-        this.chatMessages.next(transformDateToHumanReadable(messages))
-      );
+      .subscribe((messages) => this.chatMessages.next(messages));
   }
 
   joinRoom() {
