@@ -1,4 +1,4 @@
-import { ChatRoomMessages, EnrichedMessage } from '../services/chat.service';
+import { ChatRoomMessages } from '../services/chat.service';
 
 /**
  * This helper function transforms the date from mongoDB documents to human readable.
@@ -6,7 +6,7 @@ import { ChatRoomMessages, EnrichedMessage } from '../services/chat.service';
  *
  */
 export function transformDateToHumanReadable(
-  message: EnrichedMessage
+  message: ChatRoomMessages
 ): ChatRoomMessages {
   const date = message.sentAt;
 
