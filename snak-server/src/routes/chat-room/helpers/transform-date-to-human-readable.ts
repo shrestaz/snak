@@ -1,4 +1,4 @@
-import { MessageDB } from '../../../interfaces/message';
+import { Message, MessageDB } from '../../../interfaces/message';
 
 /**
  * This helper function transforms the date from mongoDB documents to human readable.
@@ -8,7 +8,9 @@ import { MessageDB } from '../../../interfaces/message';
  * @param {MessageDB[]} Array of MessageDB
  * @return {MessageDB[]} Array of MessageDB
  */
-export function transformDateToHumanReadable(messages: MessageDB[]) {
+export function transformDateToHumanReadable(
+  messages: MessageDB[] | Message[]
+) {
   return messages.map((message) => {
     const date = message.sentAt;
 

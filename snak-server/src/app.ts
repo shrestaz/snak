@@ -13,7 +13,15 @@ import { createChatRoom } from './routes/chat-room/create-chat-room';
 import { getAllChatRooms } from './routes/chat-room/get-all-chat-rooms';
 import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
+import { transformDateToHumanReadable } from './routes/chat-room/helpers/transform-date-to-human-readable';
 import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
+
+interface EnrichedMessage {
+  message: string;
+  chatRoomId: string;
+  from: string;
+  sentAt: Date;
+}
 
 const app = express();
 app.use(cors());
@@ -65,14 +73,11 @@ app.get(
   async (req: Request, res: Response) => await getMessagesForChatRoom(req, res)
 );
 
-app.post(
-  '/chatRoomMessages/:chatRoomId',
-  async (req: Request, res: Response) => await saveMessagesForChatRoom(req, res)
-);
-
 io.on('connection', function (socket) {
   console.log('User connected');
-  socket.on('message', (message: string) => {
-    io.emit('message-broadcast', { message });
+  socket.emit('connection-successful', true);
+  socket.on('message', async (message: EnrichedMessage) => {
+    await saveMessagesForChatRoom(message);
+    io.emit('message-broadcast', transformDateToHumanReadable([message])[0]);
   });
 });
