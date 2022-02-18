@@ -7,10 +7,14 @@ import {
 } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
-import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
+import {
+  ChatRoomMessages,
+  ChatService,
+  EnrichedMessage,
+} from 'src/app/services/chat.service';
 import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
 import { environment } from 'src/environments/environment';
 
@@ -25,8 +29,11 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   @ViewChild('messageList') private myScrollContainer!: ElementRef;
 
   message = new FormControl('', Validators.required);
+  chatMessages: BehaviorSubject<ChatRoomMessages[]> = new BehaviorSubject<
+    ChatRoomMessages[]
+  >([]);
 
-  chatMessages$: Observable<ChatRoomMessages[]>;
+  chatMessages$ = this.chatMessages.asObservable();
   roomDetails$: Observable<ChatRoom>;
 
   socket = io(environment.apiUrl);
@@ -40,7 +47,7 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     this.route.params.subscribe((v) => (this.roomId = v.id));
     this.scrollToBottom();
     this.roomDetails$ = this.roomService.getRoomById(this.roomId);
-    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(this.roomId);
+    this.getChatMessagesByRoom(this.roomId);
   }
 
   ngOnInit() {
@@ -59,23 +66,34 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
   }
 
   getChatMessagesByRoom(roomId: string) {
-    this.chatMessages$ = this.chatService.getChatMessagesByRoomId(roomId);
+    this.chatService
+      .getChatMessagesByRoomId(roomId)
+      .subscribe((messages) => this.chatMessages.next(messages));
   }
 
   joinRoom() {
     this.socket.emit('connection');
-    this.socket.on('message-broadcast', (data: string) => {
-      if (data) {
+    this.socket.on('connection-successful', (success: boolean) => {
+      if (success) {
         this.getChatMessagesByRoom(this.roomId);
       }
     });
   }
 
   sendMessage() {
-    const message = this.message.value;
-    if (message) {
-      this.chatService.saveChatMessagesByRoomId(this.roomId, message);
-      this.socket.emit('message', message);
+    const message = this.message.value as string;
+    const currentUser = this.authService.usernameFromResponse;
+    if (message && currentUser) {
+      const enrichedMessage: EnrichedMessage = {
+        message,
+        chatRoomId: this.roomId,
+        from: currentUser,
+        sentAt: new Date(),
+      };
+      this.socket.emit('message', enrichedMessage);
+      this.socket.on('message-broadcast', (message) =>
+        this.chatMessages.next([...this.chatMessages.value, message])
+      );
       this.message.reset();
     }
   }

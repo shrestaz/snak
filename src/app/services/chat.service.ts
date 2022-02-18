@@ -10,6 +10,13 @@ export interface ChatRoomMessages {
   from: string;
   sentAt: Date;
 }
+
+export interface EnrichedMessage {
+  message: string;
+  chatRoomId: string;
+  from: string;
+  sentAt: Date;
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -22,14 +29,5 @@ export class ChatService {
       `${this.baseUrl}/chatRoomMessages/${roomId}`
     ) as Observable<ChatRoomMessages[]>;
     return response;
-  }
-
-  saveChatMessagesByRoomId(roomId: string, message: string) {
-    const currentUser = this.authService.usernameFromResponse;
-    const response = this.http.post(
-      `${this.baseUrl}/chatRoomMessages/${roomId}`,
-      { message, chatRoomId: roomId, from: currentUser, sentAt: new Date() }
-    ) as Observable<ChatRoomMessages>;
-    response.subscribe();
   }
 }
