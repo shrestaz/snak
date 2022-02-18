@@ -10,11 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 import { AuthService } from 'src/app/services/auth.service';
-import {
-  ChatRoomMessages,
-  ChatService,
-  EnrichedMessage,
-} from 'src/app/services/chat.service';
+import { ChatRoomMessages, ChatService } from 'src/app/services/chat.service';
 import { ChatRoom, RoomsService } from 'src/app/services/rooms.service';
 import { environment } from 'src/environments/environment';
 import { transformDateToHumanReadable } from '../../utils/transform-date-to-human-readable';
@@ -85,12 +81,13 @@ export class ChatRoomComponent implements OnInit, AfterViewChecked {
     const message = this.message.value as string;
     const currentUser = this.authService.usernameFromResponse;
     if (message && currentUser) {
-      const enrichedMessage: EnrichedMessage = {
+      const enrichedMessage: ChatRoomMessages = {
         message,
         chatRoomId: this.roomId,
         from: currentUser,
         sentAt: new Date(),
       };
+      this.chatService.sendChatMessageForRoom(this.roomId, message);
       this.socket.emit('message', enrichedMessage);
       this.chatMessages.next([
         ...this.chatMessages.value,
