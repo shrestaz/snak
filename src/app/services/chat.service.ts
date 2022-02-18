@@ -3,15 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
-import { Socket } from 'socket.io-client';
-import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { ChatRoomMessage } from '../interfaces/chat-room-message';
 
-export interface ChatRoomMessages {
-  message: string;
-  chatRoomId: string;
-  from: string;
-  sentAt: Date | string;
-}
 @Injectable({
   providedIn: 'root',
 })
@@ -22,7 +15,7 @@ export class ChatService {
   getChatMessagesByRoomId(roomId: string) {
     const response = this.http.get(
       `${this.baseUrl}/chatRoomMessages/${roomId}`
-    ) as Observable<ChatRoomMessages[]>;
+    ) as Observable<ChatRoomMessage[]>;
     return response;
   }
 
@@ -34,7 +27,7 @@ export class ChatService {
     const response = this.http.post(
       `${this.baseUrl}/chatRoomMessages/${roomId}`,
       { message, chatRoomId: roomId, from: currentUser, sentAt: new Date() }
-    ) as Observable<ChatRoomMessages>;
+    ) as Observable<ChatRoomMessage>;
     response.subscribe();
   }
 }
