@@ -39,7 +39,7 @@ export async function signUp(req: Request, res: Response) {
       .insertOne({ username, password: hashedPassword });
     if (result.insertedId) {
       console.log(
-        `User successfull created with username ${username} and id ${result.insertedId}`
+        `User successfully created with username ${username} and id ${result.insertedId}`
       );
       return res.status(200).json({ success: true, username });
     }
