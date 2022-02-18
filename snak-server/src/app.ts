@@ -6,6 +6,7 @@ import express, { Request, Response } from 'express';
 import { Server } from 'http';
 import { Socket } from 'socket.io';
 import { initDb } from './database-connection';
+import { Message } from './interfaces/message';
 import { authentication } from './middleware/authentication';
 import { login } from './routes/authentication/login';
 import { signUp } from './routes/authentication/sign-up';
@@ -15,13 +16,6 @@ import { getChatRoomById } from './routes/chat-room/get-chat-room-by-id';
 import { getMessagesForChatRoom } from './routes/chat-room/get-messages-for-room';
 import { transformDateToHumanReadable } from './routes/chat-room/helpers/transform-date-to-human-readable';
 import { saveMessagesForChatRoom } from './routes/chat-room/save-messages-for-room';
-
-interface EnrichedMessage {
-  message: string;
-  chatRoomId: string;
-  from: string;
-  sentAt: Date;
-}
 
 const app = express();
 app.use(cors());
@@ -76,7 +70,7 @@ app.get(
 io.on('connection', function (socket) {
   console.log('User connected');
   socket.emit('connection-successful', true);
-  socket.on('message', async (message: EnrichedMessage) => {
+  socket.on('message', async (message: Message) => {
     await saveMessagesForChatRoom(message);
     io.emit('message-broadcast', transformDateToHumanReadable([message])[0]);
   });

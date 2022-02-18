@@ -8,14 +8,14 @@ export interface ChatRoomMessages {
   message: string;
   chatRoomId: string;
   from: string;
-  sentAt: Date;
+  sentAt: Date | string;
 }
 
 export interface EnrichedMessage {
   message: string;
   chatRoomId: string;
   from: string;
-  sentAt: Date;
+  sentAt: Date | string;
 }
 @Injectable({
   providedIn: 'root',
